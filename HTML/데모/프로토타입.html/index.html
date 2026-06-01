@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>명당 Prototype</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Pretendard", "Noto Sans KR", sans-serif;
+    }
+
+    body {
+      background: #edf0f7;
+      padding: 24px;
+      color: #111827;
+    }
+
+    .app {
+      max-width: 1500px;
+      margin: auto;
+      background: #f5f7fb;
+      border-radius: 28px;
+      padding: 24px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    .steps {
+      display: flex;
+      gap: 14px;
+      font-size: 14px;
+    }
+
+    .step {
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    .step.active {
+      background: linear-gradient(135deg, #34d399, #7c3aed);
+      color: white;
+      font-weight: 800;
+    }
+
+    .user {
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    .page {
+      display: none;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 300px 1fr 390px;
+      grid-template-rows: 610px 230px;
+      gap: 16px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #101b2a, #18243a);
+      border-radius: 20px;
+      padding: 24px;
+      color: white;
+      box-shadow: 0 18px 35px rgba(15, 23, 42, 0.2);
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+
+    .sub {
+      color: #9ca3af;
+      font-size: 14px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .main {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .main::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 35%, rgba(52, 211, 153, .45), transparent 22%),
+        linear-gradient(rgba(8, 13, 25, .55), rgba(8, 13, 25, .95)),
+        url("https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=1200&q=80");
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
+    }
+
+    .main > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .radar {
+      width: 220px;
+      height: 220px;
+      margin: 34px auto;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(52,211,153,.9) 0 5px, transparent 6px),
+        repeating-radial-gradient(circle, transparent 0 34px, rgba(148,163,184,.25) 35px),
+        conic-gradient(rgba(52,211,153,.65), rgba(52,211,153,.12), rgba(52,211,153,.65));
+      border: 1px solid rgba(148,163,184,.25);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .tag {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(52,211,153,.35);
+      color: #a7f3d0;
+      font-size: 13px;
+    }
+
+    .scan-box {
+      margin-top: 150px;
+      width: 280px;
+      padding: 18px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, .76);
+      border: 1px solid rgba(52,211,153,.4);
+    }
+
+    .status-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 76px;
+    }
+
+    .status {
+      background: rgba(15, 23, 42, .75);
+      border: 1px solid rgba(148,163,184,.2);
+      padding: 14px;
+      border-radius: 12px;
+      text-align: center;
+      color: #d1fae5;
+      font-size: 14px;
+    }
+
+    .property {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 18px;
+      margin-top: 22px;
+      background: rgba(15, 23, 42, .82);
+      padding: 16px;
+      border-radius: 18px;
+    }
+
+    .property img {
+      width: 100%;
+      height: 165px;
+      object-fit: cover;
+      border-radius: 14px;
+    }
+
+    .price {
+      font-size: 32px;
+      font-weight: 900;
+      margin: 12px 0;
+    }
+
+    .btn {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 13px 22px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #34d399, #7c3aed);
+      color: white;
+      font-weight: 800;
+      cursor: pointer;
+      border: none;
+    }
+
+    .chat-card {
+      background: linear-gradient(145deg, #17152d, #101827);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .chat-tabs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      margin: 18px 0;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+    }
+
+    .chat-tab {
+      text-align: center;
+      padding: 12px 4px;
+      color: #9ca3af;
+      font-size: 13px;
+    }
+
+    .chat-tab.active {
+      background: rgba(124, 58, 237, .35);
+      color: white;
+      border-radius: 12px 12px 0 0;
+    }
+
+    .chat-window {
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .chat-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+
+    .chat-row.user-chat {
+      justify-content: flex-end;
+    }
+
+    .avatar {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #34d399, #7c3aed);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+      flex-shrink: 0;
+    }
+
+    .bubble {
+      max-width: 78%;
+      padding: 13px 15px;
+      border-radius: 16px;
+      font-size: 14px;
+      line-height: 1.55;
+      background: rgba(255,255,255,.1);
+      color: #e5e7eb;
+    }
+
+    .user-chat .bubble {
+      background: linear-gradient(135deg, #6d5dfc, #9b5de5);
+      color: white;
+    }
+
+    .check-list {
+      margin: 12px 0;
+      color: #d1d5db;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .quick-question {
+      display: inline-block;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(124, 58, 237, .35);
+      color: white;
+      font-size: 13px;
+      margin: 6px 4px 8px 0;
+      cursor: pointer;
+    }
+
+    .chat-input-box {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      padding: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
+    }
+
+    .chat-input-box input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: white;
+      padding: 8px 10px;
+      font-size: 14px;
+    }
+
+    .chat-input-box input::placeholder {
+      color: #9ca3af;
+    }
+
+    .send-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+      color: white;
+      background: linear-gradient(135deg, #7c3aed, #fb7185);
+      font-weight: 900;
+    }
+
+    .filters {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .filter {
+      width: 72px;
+      height: 72px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.08);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #d1d5db;
+      font-size: 14px;
+    }
+
+    .filter.active {
+      border: 1px solid #34d399;
+      color: #86efac;
+      background: rgba(52,211,153,.12);
+    }
+
+    .bottom-map {
+      grid-column: span 2;
+    }
+
+    .places {
+      display: flex;
+      gap: 14px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .place {
+      width: 185px;
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .place.active {
+      border-color: #34d399;
+    }
+
+    .place img {
+      width: 100%;
+      height: 90px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .place-title {
+      font-weight: 800;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+
+    .place-score {
+      color: #86efac;
+      font-size: 13px;
+    }
+
+    .simple-page {
+      min-height: 740px;
+      background: white;
+      border-radius: 24px;
+      padding: 42px;
+      color: #111827;
+    }
+
+    .page-title {
+      font-size: 36px;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .page-desc {
+      color: #4b5563;
+      margin-bottom: 28px;
+      line-height: 1.7;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-top: 24px;
+    }
+
+    .info-card {
+      background: #f8fafc;
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      padding: 24px;
+    }
+
+    .info-card h3 {
+      font-size: 20px;
+      margin-bottom: 12px;
+    }
+
+    .info-card p {
+      color: #4b5563;
+      line-height: 1.7;
+      font-size: 15px;
+    }
+
+    .score-num {
+      font-size: 46px;
+      font-weight: 900;
+      color: #10b981;
+      margin-top: 16px;
+    }
+
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 24px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+
+    .compare-table th,
+    .compare-table td {
+      padding: 18px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    .compare-table th {
+      background: #111827;
+      color: white;
+    }
+
+    .compare-table td {
+      color: #374151;
+    }
+
+    @media (max-width: 1100px) {
+      .grid,
+      .content-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto;
+      }
+
+      .bottom-map {
+        grid-column: span 1;
+      }
+
+      .steps {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header>
+      <div class="logo">명당</div>
+
+      <div class="steps">
+        <div class="step active" onclick="moveTo('lrod')">1 L-Rod</div>
+        <div class="step" onclick="moveTo('teo')">2 Teo</div>
+        <div class="step" onclick="moveTo('master')">3 Master Tao</div>
+        <div class="step" onclick="moveTo('map')">4 Tao Map</div>
+        <div class="step" onclick="moveTo('decision')">5 의사결정</div>
+      </div>
+
+      <div class="user">박준혁 · 1인 가구 · 직장인</div>
+    </header>
+
+    <section id="lrod" class="page active">
+      <section class="grid">
+        <aside class="card">
+          <h2>L-Rod</h2>
+          <p class="sub">용산구 라이프스타일 레이더</p>
+
+          <div class="radar"></div>
+
+          <p class="sub">박준혁님의 생활 기준이 용산구 공간 분석에 반영됩니다.</p>
+
+          <div class="tags">
+            <span class="tag">직장 접근성</span>
+            <span class="tag">한강 접근</span>
+            <span class="tag">조용한 주거지</span>
+            <span class="tag">역세권</span>
+            <span class="tag">생활 인프라</span>
+          </div>
+        </aside>
+
+        <main class="card main">
+          <h2>L-Rod 스캔 진행 중...</h2>
+          <p class="sub">용산구 주변 환경과 공간 데이터를 분석하고 있습니다.</p>
+
+          <div class="scan-box">
+            <strong>용산구 한남동 리버뷰하우스</strong>
+            <p class="sub">1203호 · 후보 공간 분석 중</p>
+          </div>
+
+          <div class="status-row">
+            <div class="status">강남 접근 24분</div>
+            <div class="status">한강 접근 8분</div>
+            <div class="status">생활 인프라 93%</div>
+            <div class="status">소음 보통</div>
+          </div>
+
+          <div class="property">
+            <img src="https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=800&q=80" />
+            <div>
+              <h2>한남동 리버뷰하우스 1203호</h2>
+              <p class="sub">18평 · 1.5룸 · 남향 · 12층</p>
+              <div class="price">8.9억</div>
+              <p class="sub">용산구 실거래가 기준 예시</p>
+              <button class="btn" onclick="moveTo('teo')">환경 데이터 보기</button>
+            </div>
+          </div>
+        </main>
+
+        <aside class="card chat-card">
+          <h2>Master Tao</h2>
+          <p class="sub">AI 입지 분석 상담사</p>
+
+          <div class="chat-tabs">
+            <div class="chat-tab active">종합 분석</div>
+            <div class="chat-tab">환경 분석</div>
+            <div class="chat-tab">생활 인프라</div>
+            <div class="chat-tab">추천 사항</div>
+          </div>
+
+          <div class="chat-window" id="chatWindow">
+            <div class="chat-row bot-chat">
+              <div class="avatar">T</div>
+              <div class="bubble">
+                박준혁님, 분석 결과를 바탕으로 이 공간은 전반적으로 매우 좋은 환경을 제공합니다.
+              </div>
+            </div>
+
+            <div class="check-list">
+              · 남향이라 일조는 우수하지만 여름철 실내 온도 상승이 있을 수 있어요.<br />
+              · 반경 500m 내 생활 인프라가 잘 갖춰져 있어요.
+            </div>
+
+            <div class="quick-question" onclick="quickAsk('주변 소음은 어떤가요?')">주변 소음은 어떤가요?</div>
+            <div class="quick-question" onclick="quickAsk('출퇴근은 괜찮나요?')">출퇴근은 괜찮나요?</div>
+            <div class="quick-question" onclick="quickAsk('최종 추천 이유는?')">최종 추천 이유는?</div>
+          </div>
+
+          <div class="chat-input-box">
+            <input id="chatInput" type="text" placeholder="무엇이든 물어보세요..." onkeydown="handleEnter(event)" />
+            <button class="send-btn" onclick="sendMessage()">➤</button>
+          </div>
+        </aside>
+
+        <section class="card" onclick="moveTo('teo')" style="cursor:pointer;">
+          <h2>Teo</h2>
+          <p class="sub">용산구 공간 환경 탐색</p>
+
+          <div class="filters">
+            <div class="filter active">일조</div>
+            <div class="filter">소음</div>
+            <div class="filter">교통</div>
+            <div class="filter">공기질</div>
+            <div class="filter">상권</div>
+          </div>
+        </section>
+
+        <section class="card bottom-map" onclick="moveTo('map')" style="cursor:pointer;">
+          <h2>Tao Map</h2>
+          <p class="sub">용산구 후보 공간 비교 지도</p>
+
+          <div class="places">
+            <div class="place active">
+              <img src="https://images.unsplash.com/photo-1600210491369-e753d80a41f3?auto=format&fit=crop&w=600&q=80" />
+              <div class="place-title">한남동 리버뷰하우스</div>
+              <div class="place-score">적합도 92</div>
+            </div>
+
+            <div class="place">
+              <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=600&q=80" />
+              <div class="place-title">이촌동 센트럴파크</div>
+              <div class="place-score">적합도 88</div>
+            </div>
+
+            <div class="place">
+              <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=600&q=80" />
+              <div class="place-title">후암동 남산뷰빌라</div>
+              <div class="place-score">적합도 84</div>
+            </div>
+          </div>
+        </section>
+      </section>
+    </section>
+
+    <section id="teo" class="page">
+      <div class="simple-page">
+        <h1 class="page-title">Teo</h1>
+        <p class="page-desc">
+          용산구 후보 공간의 환경 데이터를 탐색합니다.
+          일조, 소음, 교통, 공기질, 상권 정보를 기준으로 박준혁님의 생활 적합도를 분석합니다.
+        </p>
+
+        <div class="content-grid">
+          <div class="info-card">
+            <h3>☀️ 일조</h3>
+            <p>남향 구조로 오전부터 오후까지 채광이 안정적입니다.</p>
+            <div class="score-num">86</div>
+          </div>
+
+          <div class="info-card">
+            <h3>🔊 소음</h3>
+            <p>주요 도로와 거리가 있어 실내 유입 소음은 보통 수준입니다.</p>
+            <div class="score-num">72</div>
+          </div>
+
+          <div class="info-card">
+            <h3>🚇 교통</h3>
+            <p>강남 접근 약 24분, 주요 업무지구 이동성이 우수합니다.</p>
+            <div class="score-num">94</div>
+          </div>
+
+          <div class="info-card">
+            <h3>🌫️ 공기질</h3>
+            <p>한강과 가까워 개방감은 좋지만 도로 인접 여부 확인이 필요합니다.</p>
+            <div class="score-num">81</div>
+          </div>
+
+          <div class="info-card">
+            <h3>🏪 생활 인프라</h3>
+            <p>반경 500m 내 카페, 편의점, 병원, 식당 접근성이 높습니다.</p>
+            <div class="score-num">93</div>
+          </div>
+
+          <div class="info-card">
+            <h3>📌 종합 환경</h3>
+            <p>직장인 1인 가구 기준으로 교통과 생활 편의성이 강점입니다.</p>
+            <div class="score-num">88</div>
+          </div>
+        </div>
+
+        <button class="btn" onclick="moveTo('master')">Master Tao 분석 보기</button>
+      </div>
+    </section>
+
+    <section id="master" class="page">
+      <div class="simple-page">
+        <h1 class="page-title">Master Tao</h1>
+        <p class="page-desc">
+          AI 입지 분석 상담사가 박준혁님의 생활 기준과 후보지 데이터를 바탕으로 최종 판단을 도와줍니다.
+        </p>
+
+        <div class="content-grid">
+          <div class="info-card">
+            <h3>종합 적합도</h3>
+            <p>한남동 리버뷰하우스는 직장 접근성, 한강 접근성, 생활 인프라가 균형 있게 높습니다.</p>
+            <div class="score-num">92</div>
+          </div>
+
+          <div class="info-card">
+            <h3>AI 핵심 분석</h3>
+            <p>박준혁님은 출퇴근 편의성과 조용한 주거 환경을 중요하게 보는 유형입니다.</p>
+          </div>
+
+          <div class="info-card">
+            <h3>주의 사항</h3>
+            <p>실제 계약 전 야간 소음, 관리비, 주변 도로 혼잡도, 주차 환경 확인이 필요합니다.</p>
+          </div>
+        </div>
+
+        <button class="btn" onclick="moveTo('map')">Tao Map에서 비교하기</button>
+      </div>
+    </section>
+
+    <section id="map" class="page">
+      <div class="simple-page">
+        <h1 class="page-title">Tao Map</h1>
+        <p class="page-desc">
+          용산구 후보 공간을 비교하고 기록하는 명당 지도입니다.
+        </p>
+
+        <table class="compare-table">
+          <thead>
+            <tr>
+              <th>후보지</th>
+              <th>지역</th>
+              <th>적합도</th>
+              <th>강점</th>
+              <th>주의점</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>한남동 리버뷰하우스</td>
+              <td>용산구 한남동</td>
+              <td>92</td>
+              <td>한강 접근, 교통, 생활 인프라</td>
+              <td>가격 부담, 야간 소음 확인</td>
+            </tr>
+
+            <tr>
+              <td>이촌동 센트럴파크</td>
+              <td>용산구 이촌동</td>
+              <td>88</td>
+              <td>쾌적한 주거 환경, 공원 접근</td>
+              <td>출퇴근 시간 혼잡</td>
+            </tr>
+
+            <tr>
+              <td>후암동 남산뷰빌라</td>
+              <td>용산구 후암동</td>
+              <td>84</td>
+              <td>조용한 분위기, 남산 접근</td>
+              <td>상권 접근성 낮음</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <button class="btn" onclick="moveTo('decision')">최종 의사결정하기</button>
+      </div>
+    </section>
+
+    <section id="decision" class="page">
+      <div class="simple-page">
+        <h1 class="page-title">최종 의사결정</h1>
+        <p class="page-desc">
+          박준혁님의 생활 기준과 용산구 후보지 분석 결과를 바탕으로 최적의 명당 후보를 추천합니다.
+        </p>
+
+        <div class="content-grid">
+          <div class="info-card">
+            <h3>최종 추천 공간</h3>
+            <p>한남동 리버뷰하우스 1203호</p>
+            <div class="score-num">92점</div>
+          </div>
+
+          <div class="info-card">
+            <h3>선택 이유</h3>
+            <p>직장 접근성, 한강 접근성, 생활 인프라가 균형 있게 높아 1인 가구 직장인의 생활 패턴에 적합합니다.</p>
+          </div>
+
+          <div class="info-card">
+            <h3>최종 체크리스트</h3>
+            <p>현장 방문 시 야간 소음, 실제 관리비, 채광 시간, 주변 도로 상황을 확인하면 좋습니다.</p>
+          </div>
+        </div>
+
+        <button class="btn" onclick="moveTo('lrod')">처음으로 돌아가기</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    function moveTo(pageId) {
+      const pages = document.querySelectorAll(".page");
+      const steps = document.querySelectorAll(".step");
+
+      pages.forEach(page => page.classList.remove("active"));
+      steps.forEach(step => step.classList.remove("active"));
+
+      document.getElementById(pageId).classList.add("active");
+
+      const stepMap = {
+        lrod: 0,
+        teo: 1,
+        master: 2,
+        map: 3,
+        decision: 4
+      };
+
+      steps[stepMap[pageId]].classList.add("active");
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function sendMessage() {
+      const input = document.getElementById("chatInput");
+      const text = input.value.trim();
+
+      if (text === "") return;
+
+      addUserMessage(text);
+      input.value = "";
+
+      setTimeout(() => {
+        addBotMessage(getBotReply(text));
+      }, 500);
+    }
+
+    function quickAsk(text) {
+      addUserMessage(text);
+
+      setTimeout(() => {
+        addBotMessage(getBotReply(text));
+      }, 500);
+    }
+
+    function addUserMessage(text) {
+      const chatWindow = document.getElementById("chatWindow");
+
+      const row = document.createElement("div");
+      row.className = "chat-row user-chat";
+      row.innerHTML = `<div class="bubble">${text}</div>`;
+
+      chatWindow.appendChild(row);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function addBotMessage(text) {
+      const chatWindow = document.getElementById("chatWindow");
+
+      const row = document.createElement("div");
+      row.className = "chat-row bot-chat";
+      row.innerHTML = `
+        <div class="avatar">T</div>
+        <div class="bubble">${text}</div>
+      `;
+
+      chatWindow.appendChild(row);
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function getBotReply(text) {
+      if (text.includes("소음")) {
+        return "도로변과의 거리가 있어 실내 유입 소음은 낮은 편으로 분석됩니다. 다만 야간 시간대 차량 흐름은 실제 방문 시 확인하는 것이 좋습니다.";
+      }
+
+      if (text.includes("출퇴근") || text.includes("교통")) {
+        return "강남 접근은 약 24분, 광화문과 여의도 접근성도 좋은 편입니다. 직장인 1인 가구에게 적합한 입지입니다.";
+      }
+
+      if (text.includes("추천") || text.includes("이유")) {
+        return "이 후보지는 직장 접근성, 한강 접근성, 생활 인프라가 균형 있게 높아 종합 적합도 92점으로 추천됩니다.";
+      }
+
+      if (text.includes("한강")) {
+        return "한강 접근성이 우수해 산책, 운동, 여가 생활을 중요하게 보는 사용자에게 높은 만족도를 줄 수 있습니다.";
+      }
+
+      return "용산구 한남동 후보지를 기준으로 보면 생활 편의성과 접근성은 우수하지만, 실제 계약 전 소음, 관리비, 주변 도로 상황은 확인하는 것이 좋습니다.";
+    }
+
+    function handleEnter(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    }
+  </script>
+</body>
+</html>
