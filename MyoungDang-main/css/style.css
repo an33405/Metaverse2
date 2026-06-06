@@ -117,9 +117,9 @@ h2 {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(circle at 50% 35%, rgba(52, 211, 153, .45), transparent 22%),
-    linear-gradient(rgba(8, 13, 25, .55), rgba(8, 13, 25, .95)),
-    url("https://images.unsplash.com/photo-1538485399081-7191377e8241?auto=format&fit=crop&w=1200&q=80");
+    radial-gradient(circle at 50% 35%, rgba(52, 211, 153, .35), transparent 24%),
+    linear-gradient(rgba(8, 13, 25, .45), rgba(8, 13, 25, .92)),
+    url("../img/images:seoul-map-25gu.png");
   background-size: cover;
   background-position: center;
   z-index: 0;
@@ -666,6 +666,7 @@ h2 {
   line-height: 1.7;
   text-align: center;
 }
+
 .preference-box {
   max-width: 620px;
   margin-top: 36px;
@@ -706,4 +707,32 @@ h2 {
   background: linear-gradient(135deg, #34d399, #7c3aed);
   color: white;
   border: none;
+}
+
+.small-action-btn {
+  margin-top: 18px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 999px;
+  background: #e5e7eb;
+  color: #111827;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.small-action-btn:hover {
+  opacity: 0.85;
+}
+
+.main.analyzed::before {
+  background:
+    linear-gradient(
+      rgba(8,13,25,.45),
+      rgba(8,13,25,.75)
+    ),
+    url("../img/afterlogin_LRod.png");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }

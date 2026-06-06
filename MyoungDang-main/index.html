@@ -90,7 +90,7 @@
       <div class="simple-page">
         <h1 class="page-title">마이페이지</h1>
         <p class="page-desc">
-          박준혁님의 생활 기준과 추천 결과를 확인할 수 있습니다.
+          회원 정보와 라이프스타일 설정, 최근 추천 결과를 확인할 수 있습니다.
         </p>
 
         <div class="content-grid">
@@ -100,8 +100,14 @@
           </div>
 
           <div class="info-card">
-            <h3>주거 선호</h3>
-            <p>직장 접근성, 조용한 주거지, 생활 인프라를 중요하게 봅니다.</p>
+            <h3>라이프스타일 설정</h3>
+            <p id="mypagePreferenceInfo">
+              아직 저장된 생활 기준이 없습니다.
+            </p>
+
+            <button class="small-action-btn" onclick="editPreference()">
+              라이프스타일 수정하기
+            </button>
           </div>
 
           <div class="info-card">
@@ -222,7 +228,7 @@
       <section class="grid">
         <aside class="card locked-card">
           <h2>L-Rod</h2>
-          <p class="sub">용산구 라이프스타일 레이더</p>
+          <p class="sub">서울시 라이프스타일 레이더</p>
 
           <div class="radar locked-radar"></div>
 
@@ -230,20 +236,20 @@
             로그인 후 나의 생활 기준을 기반으로 공간 분석을 시작할 수 있습니다.
           </p>
 
-          <div class="tags">
-            <span class="tag">직장 접근성</span>
-            <span class="tag">역세권</span>
-            <span class="tag">생활 인프라</span>
-            <span class="tag">소음 민감도</span>
+          <div class="tags" id="lrodTags">
+            <span class="tag">지역 설정</span>
+            <span class="tag">거래 조건</span>
+            <span class="tag">생활 패턴</span>
+            <span class="tag">AI 분석</span>
           </div>
 
-          <button class="btn" onclick="moveTo('login')">로그인 후 분석 시작</button>
+          <button class="btn" id="lrodLoginBtn" onclick="moveTo('login')">로그인 후 분석 시작</button>
         </aside>
 
         <main class="card main locked-main">
           <h2>L-Rod 스캔 대기 중...</h2>
           <p class="sub">
-            로그인 후 원하는 지역, 예산, 생활 인프라, 소음 민감도 등을 입력하면
+            로그인 후 서울시 내 원하는 지역, 거래 조건, 생활 인프라, 소음 민감도 등을 입력하면
             개인화된 명당 분석이 시작됩니다.
           </p>
 
@@ -285,7 +291,7 @@
             <div class="chat-tab">추천 사항</div>
           </div>
 
-          <div class="chat-window">
+          <div class="chat-window" id="chatWindow">
             <div class="chat-row bot-chat">
               <div class="avatar">T</div>
               <div class="bubble">
