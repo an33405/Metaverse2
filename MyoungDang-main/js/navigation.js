@@ -330,10 +330,7 @@ function activatePersonalizedResult() {
   }
 
   if (scanBox) {
-    scanBox.innerHTML = `
-      <strong>${region} 추천 후보 분석 완료</strong>
-      <p class="sub">우선순위: ${priorities}</p>
-    `;
+    scanBox.style.display = "none";
   }
 
   if (statusItems.length >= 4) {
