@@ -1192,3 +1192,6 @@ h2 {
     transform: rotate(360deg);
   }
 }
+.logo {
+  color: red !important;
+}
