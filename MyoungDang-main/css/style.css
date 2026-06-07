@@ -131,15 +131,121 @@ h2 {
 }
 
 .radar {
-  width: 220px;
-  height: 220px;
+  position: relative;
+  width: 245px;
+  height: 245px;
   margin: 34px auto;
   border-radius: 50%;
+  overflow: hidden;
+
   background:
-    radial-gradient(circle, rgba(52, 211, 153, .9) 0 5px, transparent 6px),
-    repeating-radial-gradient(circle, transparent 0 34px, rgba(148, 163, 184, .25) 35px),
-    conic-gradient(rgba(52, 211, 153, .65), rgba(52, 211, 153, .12), rgba(52, 211, 153, .65));
-  border: 1px solid rgba(148, 163, 184, .25);
+    radial-gradient(circle at center, rgba(52, 211, 153, 1) 0 6px, transparent 7px),
+    repeating-radial-gradient(
+      circle at center,
+      transparent 0 43px,
+      rgba(52, 211, 153, 0.16) 44px,
+      transparent 45px
+    ),
+    linear-gradient(90deg, transparent 49.7%, rgba(52, 211, 153, 0.14) 50%, transparent 50.3%),
+    linear-gradient(0deg, transparent 49.7%, rgba(52, 211, 153, 0.14) 50%, transparent 50.3%),
+    radial-gradient(circle at center, rgba(20, 184, 166, 0.08), rgba(3, 10, 25, 0.98) 72%);
+
+  border: 1px solid rgba(52, 211, 153, 0.72);
+
+  box-shadow:
+    0 0 24px rgba(52, 211, 153, 0.34),
+    0 0 46px rgba(125, 211, 252, 0.12),
+    inset 0 0 38px rgba(52, 211, 153, 0.11);
+}
+
+/* 회전하는 레이더 빔 */
+.radar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+
+  background:
+    conic-gradient(
+      from 0deg,
+      rgba(52, 211, 153, 0.95) 0deg,
+      rgba(52, 211, 153, 0.58) 10deg,
+      rgba(52, 211, 153, 0.18) 28deg,
+      transparent 52deg,
+      transparent 360deg
+    );
+
+  filter:
+    drop-shadow(0 0 8px rgba(52, 211, 153, 0.8))
+    drop-shadow(0 0 14px rgba(125, 211, 252, 0.25));
+
+  animation: radarSweep 4.5s linear infinite;
+}
+
+/* 맑은 밤하늘 별 */
+.radar::after {
+  content: "";
+  position: absolute;
+  inset: 13px;
+  border-radius: 50%;
+  pointer-events: none;
+
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,1) 0 1.7px, transparent 2.8px),
+    radial-gradient(circle, rgba(190,255,235,0.95) 0 1.3px, transparent 2.4px),
+    radial-gradient(circle, rgba(255,255,255,0.85) 0 0.9px, transparent 1.8px),
+    radial-gradient(circle, rgba(52,211,153,0.9) 0 0.8px, transparent 1.6px),
+    radial-gradient(circle, rgba(125,211,252,0.75) 0 0.8px, transparent 1.5px);
+
+  background-size:
+    96px 96px,
+    124px 124px,
+    62px 62px,
+    44px 44px,
+    150px 150px;
+
+  background-position:
+    18px 28px,
+    70px 20px,
+    28px 72px,
+    12px 38px,
+    88px 68px;
+
+  opacity: 0.95;
+  animation: starTwinkle 0.75s ease-in-out infinite alternate;
+}
+
+@keyframes starTwinkle {
+  0% {
+    opacity: 0.38;
+    filter:
+      drop-shadow(0 0 1px rgba(255,255,255,0.3))
+      drop-shadow(0 0 2px rgba(52,211,153,0.25));
+  }
+
+  45% {
+    opacity: 1;
+    filter:
+      drop-shadow(0 0 5px rgba(255,255,255,0.95))
+      drop-shadow(0 0 9px rgba(52,211,153,0.75));
+  }
+
+  100% {
+    opacity: 0.55;
+    filter:
+      drop-shadow(0 0 2px rgba(255,255,255,0.55))
+      drop-shadow(0 0 5px rgba(52,211,153,0.45));
+  }
+}
+
+@keyframes radarSweep {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .tags {
@@ -626,8 +732,7 @@ h2 {
 }
 
 .locked-radar {
-  filter: grayscale(0.2);
-  opacity: 0.6;
+  opacity: 1;
 }
 
 .locked-main::after {
@@ -726,16 +831,15 @@ h2 {
 
 .main.analyzed::before {
   background:
-    linear-gradient(
-      rgba(8,13,25,.45),
-      rgba(8,13,25,.75)
-    ),
+    linear-gradient(rgba(8, 13, 25, .45),
+      rgba(8, 13, 25, .75)),
     url("../img/afterlogin_LRod.png");
 
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
+
 .tao-preview-cards {
   margin-top: 22px;
   display: flex;
