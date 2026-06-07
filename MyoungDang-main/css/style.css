@@ -1546,7 +1546,21 @@ h2 {
 
 /* 1. 왼쪽 L-Rod 배경 더 어둡게 */
 #lrod .grid > .locked-card:first-child {
-  background: linear-gradient(145deg, #07111f, #111b2c);
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(52,211,153,0.04) 0%,
+      transparent 45%
+    ),
+    linear-gradient(
+      145deg,
+      #040b15 0%,
+      #0a1322 100%
+    );
+
+  box-shadow:
+    inset 0 0 60px rgba(52,211,153,0.04),
+    0 20px 40px rgba(0,0,0,0.4);
 }
 
 /* 2. 중앙 L-Rod 안에서 추천 카드를 하단으로 내리기 */
@@ -1634,4 +1648,150 @@ h2 {
   justify-content: center;
   line-height: 1;
   transform: none;
+}
+/* ===================== */
+/* L-Rod 중앙영역 로그인 전/후 비율 통일 */
+/* ===================== */
+
+#lrod .main {
+  height: 620px;
+  display: flex;
+  flex-direction: column;
+  padding: 28px;
+}
+
+/* 제목/설명 영역 */
+#lrod .main > h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+#lrod .main > .sub {
+  font-size: 13px;
+  line-height: 1.55;
+  margin-bottom: 0;
+  flex-shrink: 0;
+}
+
+/* 로그인 전 안내 박스: 너무 아래로 밀리지 않게 */
+#lrod .scan-box {
+  margin-top: 72px;
+  width: 300px;
+  padding: 16px;
+  flex-shrink: 0;
+}
+
+/* 4개 태그: 로그인 전/후 같은 위치 */
+#lrod .status-row {
+  margin-top: auto;
+  margin-bottom: 18px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+#lrod .status {
+  height: 48px;
+  padding: 0 14px;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 로그인 전 대기 카드 / 로그인 후 추천 카드 모두 하단 고정 */
+#lrod .property,
+#lrod .top-recommend-card {
+  margin-top: 0;
+  flex-shrink: 0;
+}
+
+/* 로그인 전 잠금 카드 비율 정리 */
+#lrod .locked-property {
+  grid-template-columns: 130px 1fr;
+  min-height: 140px;
+}
+
+#lrod .locked-placeholder {
+  height: 130px;
+  font-size: 36px;
+}
+
+#lrod .locked-property h2 {
+  font-size: 22px;
+}
+
+#lrod .locked-property .sub {
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+#lrod .locked-property .btn {
+  margin-top: 8px;
+  padding: 11px 18px;
+  font-size: 13px;
+}
+
+/* 로그인 후 추천 카드 크기 안정화 */
+#lrod .top-recommend-card {
+  grid-template-columns: 150px 1fr 92px;
+  gap: 16px;
+  padding: 14px;
+  min-height: 170px;
+}
+
+#lrod .top-recommend-img {
+  width: 150px;
+  height: 132px;
+}
+
+#lrod .top-recommend-info h2 {
+  font-size: 22px;
+  line-height: 1.2;
+}
+
+#lrod .recommend-meta {
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+#lrod .top-recommend-card .price {
+  font-size: 26px;
+  margin: 6px 0 9px;
+}
+
+#lrod .mini-score-row {
+  gap: 6px;
+}
+
+#lrod .mini-score-row div {
+  padding: 7px 5px;
+}
+
+#lrod .mini-score-row span {
+  font-size: 10px;
+}
+
+#lrod .mini-score-row strong {
+  font-size: 15px;
+}
+
+#lrod .score-circle {
+  width: 84px;
+  height: 84px;
+}
+
+#lrod .score-inner strong {
+  font-size: 25px;
+}
+
+#lrod .outline-data-btn {
+  right: 16px;
+  bottom: 14px;
+  padding: 9px 14px;
+  font-size: 12px;
 }
