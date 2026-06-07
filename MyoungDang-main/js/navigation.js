@@ -44,15 +44,30 @@ function loginUser() {
   const password = document.getElementById("loginPassword").value.trim();
   const loginError = document.getElementById("loginError");
 
+  const savedName = localStorage.getItem("demoUserName");
+  const savedEmail = localStorage.getItem("demoUserEmail");
+  const savedPassword = localStorage.getItem("demoUserPassword");
+  const savedHousehold = localStorage.getItem("demoUserHousehold");
+  const savedJob = localStorage.getItem("demoUserJob");
+
   if (!email || !password) {
     loginError.textContent = "이메일과 비밀번호를 모두 입력해주세요.";
     return;
   }
 
+  if (!savedEmail || !savedPassword) {
+    loginError.textContent = "가입된 계정이 없습니다. 먼저 회원가입을 진행해주세요.";
+    return;
+  }
+
+  if (email !== savedEmail || password !== savedPassword) {
+    loginError.textContent = "이메일 또는 비밀번호가 일치하지 않습니다.";
+    return;
+  }
+
   loginError.textContent = "";
 
-  setLoggedInUser(email, "1인 가구", "직장인");
-
+  setLoggedInUser(savedName, savedHousehold, savedJob);
   moveTo("preference");
 }
 
@@ -68,6 +83,12 @@ function signupUser() {
     signupError.textContent = "회원가입 정보를 모두 입력해주세요.";
     return;
   }
+
+  localStorage.setItem("demoUserName", name);
+  localStorage.setItem("demoUserEmail", email);
+  localStorage.setItem("demoUserPassword", password);
+  localStorage.setItem("demoUserHousehold", household);
+  localStorage.setItem("demoUserJob", job);
 
   signupError.textContent = "";
 
@@ -100,6 +121,8 @@ function setLoggedInUser(name, household, job) {
 function logoutUser() {
   const userArea = document.getElementById("userArea");
 
+  localStorage.removeItem("currentUserName");
+
   if (userArea) {
     userArea.innerHTML = `
       <button class="top-auth-btn" onclick="moveTo('login')">로그인</button>
@@ -107,7 +130,7 @@ function logoutUser() {
     `;
   }
 
-  moveTo("lrod");
+  location.reload();
 }
 
 function savePreference() {
@@ -373,4 +396,85 @@ function activatePersonalizedResult() {
       3위 용산시티하우스 · 적합도 84
     `;
   }
+}
+function quickAsk(question) {
+
+  const chatWindow = document.getElementById("chatWindow");
+
+  if (!chatWindow) return;
+
+  const userBubble = document.createElement("div");
+  userBubble.className = "bubble user";
+  userBubble.textContent = question;
+
+  chatWindow.appendChild(userBubble);
+
+  let answer = "";
+
+  switch (question) {
+
+    case "주변 소음은 어떤가요?":
+      answer =
+        "도로변과의 거리가 있어 실내 유입 소음은 낮은 편으로 분석됩니다. 다만 야간 시간대 차량 흐름은 실제 방문 시 확인하는 것이 좋습니다.";
+      break;
+
+    case "출퇴근은 괜찮나요?":
+      answer =
+        "신용산역 도보권에 위치하여 강남과 여의도 접근성이 우수합니다. 직주근접을 중요하게 생각하는 직장인에게 적합합니다.";
+      break;
+
+    case "생활 인프라는 어떤가요?":
+      answer =
+        "반경 500m 내 편의점, 카페, 병원, 대형마트가 위치해 있어 생활 편의성이 높은 편입니다.";
+      break;
+
+    case "최종 추천 이유는?":
+      answer =
+        "설정하신 직주근접, 역세권, 생활 인프라 조건과 예산 범위를 가장 잘 충족하여 1순위 후보로 추천되었습니다.";
+      break;
+
+    default:
+      answer =
+        "추가 분석 기능은 준비 중입니다.";
+  }
+
+  const botWrap = document.createElement("div");
+  botWrap.className = "chat-row";
+
+  botWrap.innerHTML = `
+    <div class="avatar">T</div>
+    <div class="bubble">
+      ${answer}
+    </div>
+  `;
+
+  chatWindow.appendChild(botWrap);
+
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+}
+function deleteAccount() {
+
+  if (!confirm("정말 회원탈퇴 하시겠습니까?")) {
+    return;
+  }
+
+  localStorage.removeItem("demoUserName");
+  localStorage.removeItem("demoUserEmail");
+  localStorage.removeItem("demoUserPassword");
+  localStorage.removeItem("demoUserHousehold");
+  localStorage.removeItem("demoUserJob");
+
+  localStorage.removeItem("currentUserName");
+
+  localStorage.removeItem("hasPreference");
+  localStorage.removeItem("region");
+  localStorage.removeItem("dealType");
+  localStorage.removeItem("budget");
+  localStorage.removeItem("noise");
+  localStorage.removeItem("houseType");
+  localStorage.removeItem("priorities");
+
+  alert("회원탈퇴가 완료되었습니다.");
+
+  location.reload();
 }
