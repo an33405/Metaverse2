@@ -1474,3 +1474,61 @@ h2 {
 .mini-score-row strong {
   font-size: 16px;
 }
+
+/* ===================== */
+/* L-Rod 중앙 카드 위치/칩 조정 */
+/* ===================== */
+
+/* 추천 1위 카드를 조금 아래로 */
+#lrod .top-recommend-card {
+  margin-top: 34px;
+}
+
+/* 강남 접근/한강 접근/생활 인프라/소음 칩 정리 */
+#lrod .status-row {
+  margin-top: 46px;
+  gap: 12px;
+}
+
+#lrod .status {
+  padding: 13px 16px;
+  font-size: 13.5px;
+  font-weight: 700;
+  border-radius: 12px;
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===================== */
+/* Master Tao 채팅 입력창 조정 */
+/* ===================== */
+
+#lrod .chat-input-box {
+  height: 58px;
+  padding: 7px 8px 7px 18px;
+  border-radius: 999px;
+  align-items: center;
+  overflow: visible;
+}
+
+#lrod .chat-input-box input {
+  height: 100%;
+  font-size: 13.5px;
+  padding: 0 10px;
+}
+
+#lrod .send-btn {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  flex: 0 0 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  aspect-ratio: 1 / 1;
+  transform: none;
+}
