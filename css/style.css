@@ -2073,3 +2073,16 @@ h2 {
 .teo-panel{width:320px;background:#fff;border-radius:20px;padding:24px}
 .interior-view{height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:24px;background:#0f172a;color:#fff}
 .interior-buttons{display:flex;gap:12px}
+
+
+.fake-seoul-map{
+width:100%;
+height:100%;
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+background:#f8fafc;
+}
+.seoul-svg{width:90%;max-width:900px;}
+.map-pin{fill:#ef4444;}
