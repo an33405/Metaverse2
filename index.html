@@ -410,42 +410,139 @@
     
 <section class="page" id="teo">
 
-  <div class="teo-container">
-    <aside class="teo-sidebar">
-      <div class="teo-logo">터</div>
-      <button class="teo-btn active" onclick="changeTeoLayer('traffic')">🚇<span>교통</span></button>
-      <button class="teo-btn" onclick="changeTeoLayer('commerce')">🏪<span>상권</span></button>
-      <button class="teo-btn" onclick="changeTeoLayer('park')">🌳<span>공원</span></button>
-      <button class="teo-btn" onclick="changeTeoLayer('hospital')">🏥<span>의료</span></button>
-      <button class="teo-btn" onclick="changeTeoLayer('invest')">📈<span>투자</span></button>
-    </aside>
+  <div class="teo-outer">
 
-    <main class="teo-map-area">
-      <div class="fake-seoul-map">
-      <svg viewBox="0 0 800 600" class="seoul-svg">
-      <path d="M150 200 L250 120 L420 110 L580 180 L650 300 L600 430 L450 500 L260 470 L150 360 Z"
-      fill="#e5e7eb" stroke="#94a3b8" stroke-width="3"/>
-      <circle cx="320" cy="280" r="12" class="map-pin" />
-      <text x="340" y="285">용산</text>
-      <circle cx="520" cy="240" r="10" class="map-pin"/>
-      <text x="540" y="245">강남</text>
-      <circle cx="600" cy="360" r="10" class="map-pin"/>
-      <text x="620" y="365">송파</text>
-      </svg>
-      <div class="property-pin" onclick="enterInteriorMode()">📍 용산 푸르지오 써밋</div>
-      </div>
-    </main>
+    <!-- 상단 탭: 실내 / 실외 -->
+    <div class="teo-mode-tabs">
+      <button class="teo-mode-tab active" id="tabOutdoor" onclick="switchTeoMode('outdoor')">
+        <span class="tab-icon">🌐</span> 실외 환경
+      </button>
+      <button class="teo-mode-tab" id="tabIndoor" onclick="switchTeoMode('indoor')">
+        <span class="tab-icon">🏠</span> 실내 공간
+      </button>
+    </div>
 
-    <aside class="teo-panel">
-      <h2 id="layerTitle">교통 분석</h2>
-      <div id="layerContent">
-        <p>신용산역 320m</p>
-        <p>용산역 580m</p>
-        <p>강남역 24분</p>
-        <p>광화문 18분</p>
+    <!-- ─── 실외 모드 ─── -->
+    <div id="teoOutdoor" class="teo-mode-panel">
+      <div class="teo-layout">
+
+        <!-- 사이드바 -->
+        <aside class="teo-sidebar">
+          <div class="teo-logo">터</div>
+          <button class="teo-btn active" id="btnTraffic" onclick="changeTeoLayer('traffic')">🚇<span>교통</span></button>
+          <button class="teo-btn" id="btnCommerce" onclick="changeTeoLayer('commerce')">🏪<span>상권</span></button>
+          <button class="teo-btn" id="btnPark" onclick="changeTeoLayer('park')">🌳<span>공원</span></button>
+          <button class="teo-btn" id="btnHospital" onclick="changeTeoLayer('hospital')">🏥<span>의료</span></button>
+          <button class="teo-btn" id="btnInvest" onclick="changeTeoLayer('invest')">📈<span>투자</span></button>
+        </aside>
+
+        <!-- 지도 영역 -->
+        <main class="teo-map-area">
+          <!-- 카카오 지도 임베드 -->
+          <div class="map-frame-wrap">
+            <iframe
+              id="kakaoMapFrame"
+              src="https://map.kakao.com/link/map/용산 푸르지오 써밋 오피스텔,37.5327,126.9648"
+              class="map-iframe"
+              title="카카오 지도"
+              loading="lazy"
+            ></iframe>
+            <!-- 지도 위 매물 핀 오버레이 -->
+            <div class="map-pins-overlay">
+              <div class="map-prop-pin pin-active" data-id="0" onclick="selectProperty(0)">
+                <div class="pin-dot"></div>
+                <div class="pin-label">용산 푸르지오</div>
+              </div>
+              <div class="map-prop-pin" data-id="1" onclick="selectProperty(1)" style="top:42%;left:52%;">
+                <div class="pin-dot"></div>
+                <div class="pin-label">시티파크</div>
+              </div>
+              <div class="map-prop-pin" data-id="2" onclick="selectProperty(2)" style="top:55%;left:44%;">
+                <div class="pin-dot"></div>
+                <div class="pin-label">시티하우스</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 매물 카드 가로 스크롤 -->
+          <div class="prop-card-row" id="propCardRow"></div>
+        </main>
+
+        <!-- 레이어 분석 패널 -->
+        <aside class="teo-panel">
+          <h2 id="layerTitle">교통 분석</h2>
+          <div id="layerContent">
+            <p>신용산역 320m</p>
+            <p>용산역 580m</p>
+            <p>강남역 24분</p>
+            <p>광화문 18분</p>
+          </div>
+          <div class="selected-prop-info" id="selectedPropInfo"></div>
+        </aside>
+
       </div>
-    </aside>
+    </div>
+
+    <!-- ─── 실내 모드 ─── -->
+    <div id="teoIndoor" class="teo-mode-panel" style="display:none;">
+      <div class="teo-layout">
+
+        <!-- 매물 목록 사이드바 -->
+        <aside class="teo-indoor-list" id="indoorList"></aside>
+
+        <!-- 영상 플레이어 -->
+        <main class="teo-video-main">
+          <div class="sim-video-wrap" id="simVideoWrap">
+            <div class="sim-placeholder" id="simPlaceholder">
+              <div class="sim-ph-icon">▶</div>
+              <p>매물을 선택하면<br>공간 시뮬레이션이 시작됩니다</p>
+            </div>
+            <video
+              id="simVideo"
+              class="sim-video"
+              playsinline
+              loop
+              style="display:none;"
+            ></video>
+            <!-- 최소화된 컨트롤 -->
+            <div class="sim-controls" id="simControls" style="display:none;">
+              <button class="sim-ctrl-btn" id="simPlayBtn" onclick="toggleSimVideo()">⏸</button>
+              <div class="sim-progress-wrap" onclick="seekSimVideo(event)">
+                <div class="sim-progress-bar" id="simProgressBar"></div>
+              </div>
+              <span class="sim-time" id="simTime">0:00</span>
+              <button class="sim-ctrl-btn" onclick="toggleSimMute()">🔇</button>
+            </div>
+            <div class="sim-prop-badge" id="simPropBadge"></div>
+          </div>
+
+          <!-- 실내 레이어 버튼 -->
+          <div class="indoor-layer-row">
+            <button class="indoor-layer-btn active" onclick="setIndoorLayer('view', this)">☀️ 일조</button>
+            <button class="indoor-layer-btn" onclick="setIndoorLayer('noise', this)">🔊 소음</button>
+            <button class="indoor-layer-btn" onclick="setIndoorLayer('air', this)">🌫️ 공기질</button>
+            <button class="indoor-layer-btn" onclick="setIndoorLayer('outlook', this)">👀 조망</button>
+          </div>
+        </main>
+
+        <!-- 실내 분석 패널 -->
+        <aside class="teo-panel" id="indoorPanel">
+          <h2>실내 분석</h2>
+          <div id="indoorLayerContent">
+            <p class="teo-panel-hint">매물을 선택하면<br>실내 환경 데이터가 표시됩니다.</p>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+
   </div>
+
+  <!-- 영상 URL 등록 가이드 주석
+    각 매물의 videoUrl에 본인 영상 URL을 입력하세요.
+    지원: mp4 직링크, YouTube embed URL (https://www.youtube.com/embed/VIDEO_ID?autoplay=1&mute=1)
+    YouTube는 <video>가 아닌 <iframe>으로 자동 전환됩니다.
+  -->
 
 </section>
 
@@ -591,6 +688,7 @@
   <script src="js/navigation.js"></script>
   <script src="js/gemini.js"></script>
   <script src="js/chat.js"></script>
+  <script src="js/teo.js"></script>
 </body>
 
 </html>
